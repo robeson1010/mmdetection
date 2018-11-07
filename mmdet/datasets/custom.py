@@ -8,6 +8,8 @@ from torch.utils.data import Dataset
 from .transforms import (ImageTransform, BboxTransform, MaskTransform,
                          Numpy2Tensor)
 from .utils import to_tensor, random_scale
+import albumentations as A
+import random
 
 
 class CustomDataset(Dataset):
@@ -95,6 +97,12 @@ class CustomDataset(Dataset):
         self.bbox_transform = BboxTransform()
         self.mask_transform = MaskTransform()
         self.numpy2tensor = Numpy2Tensor()
+        self.light=A.Compose([A.RGBShift(),A.InvertImg(),
+            A.Blur(),
+            A.GaussNoise(),
+            A.Flip(),
+            A.RandomRotate90(),
+            A.RandomSizedCrop((768-384, 768), 768, 768)], bbox_params={'format':'pascal_voc','min_visibility': 0.4, 'label_fields': ['category_id']}, p=1)
 
     def __len__(self):
         return len(self.img_infos)
@@ -200,11 +208,11 @@ class CustomDataset(Dataset):
             pad_shape=pad_shape,
             scale_factor=scale_factor,
             flip=flip)
-
+        aumed=self.light(image=img,bboxes=gt_bboxes, category_id=gt_labels)
         data = dict(
-            img=DC(to_tensor(img), stack=True),
+            img=DC(to_tensor(aumed['image']), stack=True),
             img_meta=DC(img_meta, cpu_only=True),
-            gt_bboxes=DC(to_tensor(gt_bboxes)))
+            gt_bboxes=DC(to_tensor(aumed['bboxes'])))
         if self.proposals is not None:
             data['proposals'] = DC(to_tensor(proposals))
         if self.with_label:
