@@ -84,7 +84,7 @@ test_cfg = dict(
     rcnn=dict(score_thr=0.05, max_per_img=100, nms_thr=0.5))
 # dataset settings
 dataset_type = 'CustomDataset'
-data_root = '/data2/rice2/'
+data_root = '/data2/rice/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 data = dict(
@@ -93,11 +93,11 @@ data = dict(
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'annotations.pkl',
-        img_prefix=data_root + '',
-        img_scale=(1823, 1025),
+        img_prefix=data_root + 'train/',
+        img_scale=[(384, 768), (768, 768)],
         img_norm_cfg=img_norm_cfg,
         size_divisor=32,
-        flip_ratio=0.5,
+        flip_ratio=0,
         with_mask=False,
         with_crowd=True,
         with_label=True),
@@ -146,7 +146,7 @@ log_config = dict(
 total_epochs = 24
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = '/data2/rice2/log/'
+work_dir = '/data2/rice/log/'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
