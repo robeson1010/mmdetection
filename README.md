@@ -5,6 +5,8 @@
 
 A experiment that test Cascade Faster-Rcnn performance on Drone image. The model was based on mmdetection.
 
+weigut（https://s3-ap-northeast-1.amazonaws.com/robdisk/latest.pth）
+
 mmdetection is an open source object detection toolbox based on PyTorch. It is
 a part of the open-mmlab project developed by [Multimedia Laboratory, CUHK](http://mmlab.ie.cuhk.edu.hk/).
 
